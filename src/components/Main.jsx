@@ -45,7 +45,7 @@ const Main = () => {
 
 
   const getAlbumTracks = async (album) => {
-    const reqURL = 'http://ws.audioscrobbler.com/2.0/';
+    const reqURL = 'https://ws.audioscrobbler.com/2.0/';
 
     const params = {
       method: 'album.getInfo',
@@ -96,7 +96,7 @@ const Main = () => {
   };
 
   const userTopMusic = async (method, user, period, limit, update) => {
-    const reqURL = 'http://ws.audioscrobbler.com/2.0/';
+    const reqURL = 'https://ws.audioscrobbler.com/2.0/';
 
     const params = {
       method,
