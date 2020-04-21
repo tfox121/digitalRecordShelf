@@ -1,0 +1,8 @@
+.alice-carousel__stage-item > .ui.basic.segment > .ui.image {
+  width: 95%;
+  margin: 3vh auto;
+}
+
+div.alice-carousel:nth-child(2) {
+  width: 89%;
+}
