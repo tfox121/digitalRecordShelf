@@ -167,13 +167,22 @@ const Main = () => {
 
   return (
     <>
-      <Header content="Digital Record Shelf" />
+      <Header as="h1" content="Digital Record Shelf" />
       <Form action="submit" onSubmit={handleSubmit}>
         <Form.Field>
-          <Input inverted icon placeholder="Your Last.fm Username...">
-            <input value={lastfmUser} onChange={(e) => setLastfmUser(e.target.value)} />
-            <Icon name="search" />
-          </Input>
+          <Input
+            inverted
+            action={{
+              color: 'teal',
+              labelPosition: 'right',
+              icon: 'search',
+              content: 'Search',
+            }}
+            placeholder="Your Last.fm Username..."
+            size="large"
+            value={lastfmUser}
+            onChange={(e) => setLastfmUser(e.target.value)}
+          />
         </Form.Field>
       </Form>
       {loaderRender()}
