@@ -11,7 +11,7 @@ import ModeSelector from './ModeSelector';
 
 const Main = () => {
   const [loading, setLoading] = useState(false);
-  const [lastfmUser, setLastfmUser] = useState('foxtrapper121');
+  const [lastfmUser, setLastfmUser] = useState('');
   const [overallAlbums, setOverallAlbums] = useState([]);
   const [lastYearAlbums, setLastYearAlbums] = useState([]);
   const [lastSixMonthsArtists, setLastSixMonthsArtists] = useState([]);
@@ -20,7 +20,6 @@ const Main = () => {
   useEffect(() => {
     if (!filteredAlbums.length && (lastYearAlbums && lastSixMonthsArtists)) {
       let albumfiltered = 0;
-      console.log('PREFILTER', overallAlbums, filteredAlbums);
       const albums = overallAlbums.filter((album) => {
         if (!lastYearAlbums.find(({ name }) => name === album.name)
           && !lastSixMonthsArtists.find(({ name }) => name === album.artist.name)
@@ -35,7 +34,6 @@ const Main = () => {
       console.log(albumfiltered);
       setFilteredAlbums(albums);
       console.log('FILTERED', albums);
-      console.log('ARTISTS', lastSixMonthsArtists);
     }
   }, [overallAlbums]);
 
