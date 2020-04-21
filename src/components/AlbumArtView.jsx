@@ -35,7 +35,7 @@ const AlbumArtView = (props) => {
 
   const images = albums.map((album) => (
     <Container>
-      <Image onDragStart={handleOnDragStart} autoHeight="true" src={album.image[3]['#text']} />
+      <Image onDragStart={handleOnDragStart} src={album.image[3]['#text']} />
     </Container>
   ));
   return (
@@ -44,13 +44,12 @@ const AlbumArtView = (props) => {
         mouseTrackingEnabled
         onSlideChanged={handleSlideChange}
         items={imagesPlusText}
-        dotsDisabled="true"
-        buttonsDisabled="true"
+        dotsDisabled
+        buttonsDisabled
         ref={bigCarouselRef}
       />
       <AliceCarousel
         mouseTrackingEnabled
-        autoHeight="true"
         onSlideChanged={handleSlideChange}
         items={images}
         ref={smallCarouselRef}

@@ -165,7 +165,7 @@ const Main = () => {
 
   return (
     <>
-      <Header as="h1" content="Digital Record Shelf" />
+      <Header as="h1" content="Record Shelf Rediscovery" />
       <Form action="submit" onSubmit={handleSubmit}>
         <Form.Field>
           <Input
