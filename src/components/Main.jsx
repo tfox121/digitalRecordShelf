@@ -1,21 +1,68 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import {
-  Icon, Input, Segment, Header, Form, Loader, Dimmer, Image,
+  Input, Segment, Header, Form, Loader, Dimmer, Icon, Image, Button,
 } from 'semantic-ui-react';
 
-import staticData from '../data/staticData';
+import spotify from '../api/spotify';
+// import staticData from '../data/staticData';
 import getRandomSubset from '../utils/getRandomSubset';
 
 import ModeSelector from './ModeSelector';
+import Player from './Player';
 
-const Main = () => {
+const TWELVE_MONTH_TOP_ALBUMS_FILTER = 100;
+const SIX_MONTH_TOP_ARTIST_FILTER = 75;
+const OVERALL_TOP_ALBUMS_NUM = 275;
+
+const Main = ({ location }) => {
   const [loading, setLoading] = useState(false);
-  const [lastfmUser, setLastfmUser] = useState('');
+  const [lastfmUser, setLastfmUser] = useState('foxtrapper121');
+  const [spotifyToken, setSpotifyToken] = useState('');
   const [overallAlbums, setOverallAlbums] = useState([]);
   const [lastYearAlbums, setLastYearAlbums] = useState([]);
   const [lastSixMonthsArtists, setLastSixMonthsArtists] = useState([]);
   const [filteredAlbums, setFilteredAlbums] = useState([]);
+  const [randomAlbums, setRandomAlbums] = useState([]);
+  const [isPlaying, setIsPlaying] = useState('Paused');
+  const [progressMs, setProgressMs] = useState(0);
+  const [mediaItem, setMediaItem] = useState({
+    album: { images: [{ url: '' }] },
+    name: '',
+    artists: [{ name: '' }],
+    duration_ms: 0,
+  });
+
+  useEffect(() => {
+    if (location.hash) {
+      const accessToken = location.hash.slice(1).split('&')[0].split('=')[1];
+      setSpotifyToken(accessToken);
+    }
+  }, [location]);
+
+  useEffect(() => {
+    const getCurrentlyPlaying = async () => {
+      const response = await spotify.get('/me/player/currently-playing', {
+        headers: { Authorization: `Bearer ${spotifyToken}` },
+        params: {
+          market: 'from_token',
+        },
+      });
+      // eslint-disable-next-line camelcase
+      const { item, is_playing, progress_ms } = response.data;
+      setMediaItem(item);
+      setIsPlaying(is_playing);
+      setProgressMs(progress_ms);
+    };
+
+    let checkInterval;
+    if (spotifyToken) {
+      checkInterval = setInterval(getCurrentlyPlaying, 1000);
+    }
+    if (!spotifyToken && checkInterval) {
+      clearInterval(checkInterval);
+    }
+  }, [spotifyToken]);
 
   useEffect(() => {
     if (!filteredAlbums.length && (lastYearAlbums && lastSixMonthsArtists)) {
@@ -35,14 +82,14 @@ const Main = () => {
       setFilteredAlbums(albums);
       console.log('FILTERED', albums);
     }
-  }, [overallAlbums]);
+  }, [filteredAlbums.length, lastSixMonthsArtists, lastYearAlbums, overallAlbums]);
 
   useEffect(() => {
     if (filteredAlbums.length) {
       loading === true && setLoading(false);
+      setRandomAlbums(getRandomSubset(filteredAlbums, 15));
     }
-  }, [filteredAlbums]);
-
+  }, [filteredAlbums, loading]);
 
   const getAlbumTracks = async (album) => {
     const reqURL = 'https://ws.audioscrobbler.com/2.0/';
@@ -135,20 +182,58 @@ const Main = () => {
     }
   };
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    await userTopMusic('user.getTopAlbums', lastfmUser, '12month', 100, setLastYearAlbums);
-    await userTopMusic('user.getTopArtists', lastfmUser, '6month', 75, setLastSixMonthsArtists);
-    await userTopMusic('user.getTopAlbums', lastfmUser, 'overall', 275, setOverallAlbums);
+    await userTopMusic('user.getTopAlbums', lastfmUser, '12month', TWELVE_MONTH_TOP_ALBUMS_FILTER, setLastYearAlbums);
+    await userTopMusic('user.getTopArtists', lastfmUser, '6month', SIX_MONTH_TOP_ARTIST_FILTER, setLastSixMonthsArtists);
+    await userTopMusic('user.getTopAlbums', lastfmUser, 'overall', OVERALL_TOP_ALBUMS_NUM, setOverallAlbums);
     // setFilteredAlbums(staticData);
     setLoading(false);
   };
 
-  const loaderRender = () => {
+
+  const spotifyFindAlbumUri = async (albumData) => {
+    try {
+      const response = await spotify.get(`/search?q=album:${encodeURI(albumData[0])}%20artist:${encodeURI(albumData[1])}`, {
+        headers: { Authorization: `Bearer ${spotifyToken}` },
+        params: {
+          type: 'album',
+          limit: 1,
+        },
+      });
+      return response.data.albums.items[0].uri;
+    } catch (err) {
+      console.log(err);
+      return null;
+    }
+  };
+
+  const changeTrackHandler = async (uri) => {
+    try {
+      const response = await axios({
+        method: 'put',
+        url: 'https://api.spotify.com/v1/me/player/play',
+        headers: { Authorization: `Bearer ${spotifyToken}` },
+        data: { context_uri: uri },
+      });
+      console.log(response);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const albumSelect = async (albumData) => {
+    const uri = await spotifyFindAlbumUri(albumData);
+    console.log(uri);
+    changeTrackHandler(uri);
+  };
+
+  const albumsRender = () => {
     if (!loading) {
       return (
-        <ModeSelector albums={getRandomSubset(filteredAlbums, 15)} />
+        <ModeSelector albums={randomAlbums} albumSelect={albumSelect} />
       );
     }
     return (
@@ -156,16 +241,43 @@ const Main = () => {
         <Dimmer active>
           <Loader indeterminate>Retrieving Albums</Loader>
         </Dimmer>
-
         <Image src="https://react.semantic-ui.com/images/wireframe/short-paragraph.png" />
       </Segment>
     );
   };
 
 
+  const spotifyStuff = () => {
+    const url = `https://accounts.spotify.com/authorize?client_id=${process.env.REACT_APP_SPOTIFY_ID}&response_type=token&redirect_uri=http://localhost:3000&scope=streaming%20user-read-playback-state%20user-modify-playback-state%20user-read-currently-playing`;
+
+    return (
+      <>
+        {
+          !spotifyToken && (
+            <Segment basic textAlign="center">
+              <Button as="a" href={url} color="green">
+                <Icon name="spotify" />
+                Connect to Spotify
+              </Button>
+            </Segment>
+          )
+        }
+        {
+          spotifyToken && (
+            <Player
+              item={mediaItem}
+              isPlaying={isPlaying}
+              progressMs={progressMs}
+            />
+          )
+        }
+      </>
+    );
+  };
+
   return (
     <>
-      <Header as="h1" content="Record Shelf Rediscovery" />
+      <Header as="h1" href="/" content="Record Shelf Rediscovery" />
       <Form action="submit" onSubmit={handleSubmit}>
         <Form.Field>
           <Input
@@ -183,7 +295,8 @@ const Main = () => {
           />
         </Form.Field>
       </Form>
-      {loaderRender()}
+      {spotifyStuff()}
+      {albumsRender()}
     </>
   );
 };

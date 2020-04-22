@@ -5,7 +5,7 @@ import AlbumArtView from './AlbumArtView';
 import AlbumListView from './AlbumListView';
 
 const ModeSelector = (props) => {
-  const { albums } = props;
+  const { albums, albumSelect } = props;
   const [activeItem, setActiveItem] = useState('list');
 
   if (!albums[0] || !albums[0].tracks) {
@@ -30,10 +30,10 @@ const ModeSelector = (props) => {
       </Menu>
 
       <div style={{ display: `${activeItem === 'list' ? 'block' : 'none'}` }}>
-        <AlbumListView albums={albums} />
+        <AlbumListView albums={albums} albumSelect={albumSelect} />
       </div>
       <div style={{ display: `${activeItem === 'art' ? 'block' : 'none'}` }}>
-        <AlbumArtView albums={albums} />
+        <AlbumArtView albums={albums} albumSelect={albumSelect} />
       </div>
     </div>
   );

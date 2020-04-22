@@ -2,13 +2,18 @@ import React from 'react';
 import { Header, Table } from 'semantic-ui-react';
 
 const AlbumListView = (props) => {
-  const { albums } = props;
+  const { albumSelect, albums } = props;
 
-  console.log(albums[0].tracks);
+  const handleClick = (event) => {
+    const albumInfo = Array.from(event.currentTarget.children)
+      .map((el) => el.innerText).slice(0, 2);
+    console.log(albumInfo);
+    albumSelect(albumInfo);
+  };
 
   return (
     <>
-      <Table celled inverted unstackable>
+      <Table celled inverted unstackable selectable>
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>Name</Table.HeaderCell>
@@ -19,7 +24,7 @@ const AlbumListView = (props) => {
         </Table.Header>
         <Table.Body>
           {albums.map((album) => (
-            <Table.Row key={album.mbid}>
+            <Table.Row key={album.name} onClick={handleClick}>
               <Table.Cell>{album.name}</Table.Cell>
               <Table.Cell>{album.artist.name}</Table.Cell>
               <Table.Cell>{album.playcount}</Table.Cell>
@@ -28,11 +33,10 @@ const AlbumListView = (props) => {
           ))}
         </Table.Body>
       </Table>
-      <Header as="h5" textAlign="center">
+      <Header inverted as="h5" textAlign="center">
         20 of
         {' '}
         {albums.length}
-        .
       </Header>
     </>
   );

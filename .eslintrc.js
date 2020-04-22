@@ -42,6 +42,12 @@ module.exports = {
       1
     ],
     "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
-    "no-unused-expressions": ["error", { "allowShortCircuit": true, "allowTernary": true }]
+    "no-unused-expressions": ["error", { "allowShortCircuit": true, "allowTernary": true }],
+    "no-mixed-operators": [
+      "error",
+      {
+        "allowSamePrecedence": true
+      }
+    ]
   },
 };
