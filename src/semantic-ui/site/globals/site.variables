@@ -1,0 +1,6 @@
+/*******************************
+     User Global Variables
+*******************************/
+
+@headerFont       : "Nunito Sans";
+@pageFont         : "Nunito Sans";
