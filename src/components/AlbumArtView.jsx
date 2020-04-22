@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import AliceCarousel from 'react-alice-carousel';
 import 'react-alice-carousel/lib/alice-carousel.css';
 import {
@@ -8,7 +8,7 @@ import {
 import './AlbumArtView.css';
 
 const AlbumArtView = (props) => {
-  const { albums } = props;
+  const { albumSelect, albums } = props;
   const bigCarouselRef = useRef(null);
   const smallCarouselRef = useRef(null);
 
@@ -20,15 +20,22 @@ const AlbumArtView = (props) => {
     smallCarouselRef.current.slideTo(e.item);
   };
 
+  const handleClick = (event) => {
+    const headerElement = Array.from(event.currentTarget.children)[1];
+    const albumInfo = Array.from(headerElement.children).map((el) => el.innerText);
+    console.log(albumInfo);
+    albumSelect(albumInfo.reverse());
+  };
+
   const imagesPlusText = albums.map((album) => (
-    <Segment basic inverted textAlign="center">
-      <Image onDragStart={handleOnDragStart} autoHeight="true" src={album.image[3]['#text']} />
+    <Segment basic inverted textAlign="center" onClick={handleClick}>
+      <Image onDragStart={handleOnDragStart} src={album.image[3]['#text']} />
       <Header as="h5">
-        {album.artist.name}
+        <div>{album.artist.name}</div>
         {' '}
         -
         {' '}
-        {album.name}
+        <div>{album.name}</div>
       </Header>
     </Segment>
   ));
