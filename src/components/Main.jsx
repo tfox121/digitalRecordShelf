@@ -285,7 +285,7 @@ const Main = ({ location }) => {
             action={{
               color: 'teal',
               labelPosition: 'right',
-              icon: 'search',
+              icon: 'lastfm',
               content: 'Search',
             }}
             placeholder="Your Last.fm Username..."
