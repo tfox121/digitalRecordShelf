@@ -226,7 +226,6 @@ const Main = ({ location }) => {
 
   const albumSelect = async (albumData) => {
     const uri = await spotifyFindAlbumUri(albumData);
-    console.log(uri);
     changeTrackHandler(uri);
   };
 
@@ -248,7 +247,7 @@ const Main = ({ location }) => {
 
 
   const spotifyStuff = () => {
-    const url = `https://accounts.spotify.com/authorize?client_id=${process.env.REACT_APP_SPOTIFY_ID}&response_type=token&redirect_uri=http://localhost:3000&scope=streaming%20user-read-playback-state%20user-modify-playback-state%20user-read-currently-playing`;
+    const url = `https://accounts.spotify.com/authorize?client_id=${process.env.REACT_APP_SPOTIFY_ID}&response_type=token&redirect_uri=https://recordshelfrediscovery.herokuapp.com/&scope=streaming%20user-read-playback-state%20user-modify-playback-state%20user-read-currently-playing`;
 
     return (
       <>
