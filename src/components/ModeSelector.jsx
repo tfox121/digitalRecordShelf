@@ -6,7 +6,7 @@ import AlbumListView from './AlbumListView';
 
 const ModeSelector = (props) => {
   const { albums, albumSelect } = props;
-  const [activeItem, setActiveItem] = useState('list');
+  const [activeItem, setActiveItem] = useState('art');
 
   if (!albums[0] || !albums[0].tracks) {
     return null;
@@ -16,24 +16,25 @@ const ModeSelector = (props) => {
 
   return (
     <div>
-      <Menu inverted attached="top" widths="2" tabular>
-        <Menu.Item
-          name="list"
-          active={activeItem === 'list'}
-          onClick={handleItemClick}
-        />
+      <Menu inverted borderless attached="top" widths="2" tabular>
         <Menu.Item
           name="art"
           active={activeItem === 'art'}
           onClick={handleItemClick}
         />
+        <Menu.Item
+          name="list"
+          active={activeItem === 'list'}
+          onClick={handleItemClick}
+        />
       </Menu>
 
-      <div style={{ display: `${activeItem === 'list' ? 'block' : 'none'}` }}>
-        <AlbumListView albums={albums} albumSelect={albumSelect} />
-      </div>
+
       <div style={{ display: `${activeItem === 'art' ? 'block' : 'none'}` }}>
         <AlbumArtView albums={albums} albumSelect={albumSelect} />
+      </div>
+      <div style={{ display: `${activeItem === 'list' ? 'block' : 'none'}` }}>
+        <AlbumListView albums={albums} albumSelect={albumSelect} />
       </div>
     </div>
   );
