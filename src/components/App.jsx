@@ -5,8 +5,6 @@ import { Container, Segment } from 'semantic-ui-react';
 import history from '../history';
 import './App.css';
 
-import Auth from './Auth';
-import AuthCallback from './AuthCallback';
 import Main from './Main';
 
 const App = () => (
@@ -15,8 +13,6 @@ const App = () => (
       <Segment inverted className="app">
         <Switch>
           <Route path="/" exact component={Main} />
-          <Route path="/auth" exact component={Auth} />
-          <Route path="/auth/callback/" exact component={AuthCallback} />
         </Switch>
       </Segment>
     </Container>
