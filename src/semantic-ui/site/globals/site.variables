@@ -4,3 +4,5 @@
 
 @headerFont       : "Nunito Sans";
 @pageFont         : "Nunito Sans";
+@red              : #830000;
+@green            : #116C23;

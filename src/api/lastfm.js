@@ -1,7 +1,9 @@
 import axios from 'axios';
 
-const baseURL = process.env.NODE_ENV === 'development'
-  ? 'http://localhost:8000/auth'
-  : 'https://subreddit-game-api.herokuapp.com/games';
-
-export default axios.create({ baseURL });
+export default axios.create({
+  baseURL: 'https://ws.audioscrobbler.com/2.0',
+  params: {
+    api_key: process.env.REACT_APP_LASTFM_API,
+    format: 'json',
+  },
+});

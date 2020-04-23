@@ -86,7 +86,7 @@
 @smallValueSize: 3rem;
 @smallHorizontalValueSize: 2rem;
 
-@textValueSize: 2rem;
+@textValueSize: 1.9rem;
 @valueSize: 4rem;
 @horizontalValueSize: 3rem;
 

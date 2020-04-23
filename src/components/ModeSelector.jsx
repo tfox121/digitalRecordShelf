@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
-import { Menu } from 'semantic-ui-react';
+import { Menu, Divider } from 'semantic-ui-react';
 
 import AlbumArtView from './AlbumArtView';
 import AlbumListView from './AlbumListView';
 
 const ModeSelector = (props) => {
-  const { albums, albumSelect } = props;
+  const {
+    albums, albumSelect, filteredNum, loading,
+  } = props;
   const [activeItem, setActiveItem] = useState('art');
 
-  if (!albums[0] || !albums[0].tracks) {
+  if (loading || !albums[0] || !albums[0].tracks) {
     return null;
   }
 
@@ -16,7 +18,8 @@ const ModeSelector = (props) => {
 
   return (
     <div>
-      <Menu inverted borderless attached="top" widths="2" tabular>
+      <Divider />
+      <Menu inverted secondary attached="top" widths="2" tabular>
         <Menu.Item
           name="art"
           active={activeItem === 'art'}
@@ -28,13 +31,11 @@ const ModeSelector = (props) => {
           onClick={handleItemClick}
         />
       </Menu>
-
-
       <div style={{ display: `${activeItem === 'art' ? 'block' : 'none'}` }}>
         <AlbumArtView albums={albums} albumSelect={albumSelect} />
       </div>
       <div style={{ display: `${activeItem === 'list' ? 'block' : 'none'}` }}>
-        <AlbumListView albums={albums} albumSelect={albumSelect} />
+        <AlbumListView albums={albums} albumSelect={albumSelect} filteredNum={filteredNum} />
       </div>
     </div>
   );

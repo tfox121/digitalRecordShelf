@@ -20,7 +20,9 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1",
     "react-socks": "^2.1.0",
-    "semantic-ui-react": "^0.88.2"
+    "semantic-ui-less": "^2.4.1",
+    "semantic-ui-react": "^0.88.2",
+    "semantic-ui-react-less-loader": "^0.2.0"
   },
   "scripts": {
     "start": "craco start -r dotenv/config",
@@ -47,8 +49,11 @@
     ]
   },
   "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/plugin-syntax-dynamic-import": "^7.8.3",
     "@craco/craco": "^5.6.4",
     "@semantic-ui-react/craco-less": "^1.2.1",
+    "babel-plugin-transform-semantic-ui-react-imports": "^1.4.1",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
     "eslint": "^6.8.0",

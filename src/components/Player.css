@@ -1,13 +1,19 @@
 /** Now Playing **/
+.main-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 .now-playing__name {
   font-size: 1.5em;
   margin-bottom: 0.2em;
 }
 .now-playing__artist {
-  margin-bottom: 1em;
+  margin-bottom: 0.8em;
 }
 .now-playing__status {
-  margin-bottom: 1em;
+  margin-bottom: 0.5em;
 }
 .now-playing__img {
   float: left;
@@ -21,16 +27,47 @@
 }
 .now-playing__side {
   margin: auto;
-  width: 45%;
+  width: 60%;
 }
 /** Progress **/
+.progress-details {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: 80%;
+}
+
 .progress {
+  width: 100%;
   border: 1px solid #eee;
   height: 6px;
   border-radius: 3px;
   overflow: hidden;
+  margin: 0 0.8em;
 }
+
 .progress__bar {
   background-color: #eee;
   height: 4px;
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 0.8em;
+}
+
+.controls > i.step.icon {
+  height: 100%;
+}
+
+.controls > i.icon {
+  cursor: pointer;
+}
+
+@media only screen and (max-width: 425px) {
+  .now-playing__side {
+    width: 100%;
+  }
 }
