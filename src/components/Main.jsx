@@ -26,13 +26,34 @@ const Main = ({ location }) => {
   const [loading, setLoading] = useState(false);
   const [lastfmUser, setLastfmUser] = useState('');
   const [spotifyToken, setSpotifyToken] = useState('');
-  const [deviceId, setDeviceId] = useState('');
   const [overallAlbums, setOverallAlbums] = useState([]);
   const [lastYearAlbums, setLastYearAlbums] = useState([]);
   const [lastSixMonthsArtists, setLastSixMonthsArtists] = useState([]);
   const [filteredAlbums, setFilteredAlbums] = useState([]);
   const [randomAlbums, setRandomAlbums] = useState([]);
+  const [extendedArt, setExtendedArt] = useState([]);
 
+  // const getExtendedArt = async (albumList) => {
+  //   console.log('Albums', albumList);
+  //   const list = [];
+  //   await albumList.forEach(async (album, index) => {
+  //     try {
+  //       const response = await axios.get(`http://coverartarchive.org/release/${album.mbid}`);
+  //       console.log(response.data);
+  //       list[index] = response.data.images;
+  //     } catch (err) {
+  //       console.log('No art found');
+  //       list[index] = [{ image: album.image[3]['#text'] }];
+  //     }
+  //   });
+
+  //   console.log('ART', list);
+  //   setExtendedArt(list);
+  // };
+
+  // useEffect(() => {
+  //   getExtendedArt(randomAlbums);
+  // }, [randomAlbums]);
 
   useEffect(() => {
     if (location.hash) {
@@ -43,7 +64,11 @@ const Main = ({ location }) => {
 
   useEffect(() => {
     if (spotifyToken) {
-      initiateSpotifyWebPlayback(spotifyToken, setDeviceId);
+      try {
+        initiateSpotifyWebPlayback(spotifyToken);
+      } catch (err) {
+        console.error(err);
+      }
     }
   }, [spotifyToken]);
 
@@ -87,7 +112,7 @@ const Main = ({ location }) => {
   const albumSelect = async (albumData) => {
     try {
       const uri = await spotifyFindAlbumUri(spotify, albumData, spotifyToken);
-      changeSpotifyMusic(axios, uri, spotifyToken, deviceId);
+      changeSpotifyMusic(axios, spotify, uri, spotifyToken);
     } catch (err) {
       console.error(err);
     }
@@ -103,8 +128,8 @@ const Main = ({ location }) => {
         spotifyToken={spotifyToken}
         setSpotifyToken={setSpotifyToken}
       />
-      <ModeSelector loading={loading} albums={randomAlbums} albumSelect={albumSelect} filteredNum={filteredAlbums.length} />
-      <LoaderBlock loading={loading} />
+      <ModeSelector loading={loading} albums={randomAlbums} albumSelect={albumSelect} extendedArt={extendedArt} filteredNum={filteredAlbums.length} token={spotifyToken} />
+      <LoaderBlock loading={loading} token={spotifyToken} />
     </ >
   );
 };
