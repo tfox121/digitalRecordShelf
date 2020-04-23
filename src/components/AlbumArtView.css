@@ -1,8 +1,51 @@
-.alice-carousel__stage-item > .ui.basic.segment > .ui.image {
+.alice-carousel__stage-item > .ui.basic.segment > .image-container > .ui.image {
   width: 95%;
   margin: 3vh auto;
 }
 
 div.alice-carousel:nth-child(2) {
   width: 89%;
+}
+
+li.alice-carousel__dots-item:last-child {
+  margin: 0;
+}
+
+div.image-container > div.image-icon {
+  position: absolute;
+  display: flex;
+  font-size: 250%;
+  align-items: center;
+  justify-content: center;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  transition: 0.3s ease;
+  opacity: 0;
+}
+
+div.image-container > div.image-icon:hover {
+  opacity: 1;
+}
+
+div.image-container > div.image-icon > i {
+  cursor: pointer;
+}
+
+h5.ui.header.album-info {
+  display: flex;
+  justify-content: center;
+}
+
+div.space {
+  padding: 0 0.5em;
+}
+
+@media only screen and (max-width: 425px) {
+  div.image-container > div.image-icon {
+    font-size: 200%;
+  }
 }
