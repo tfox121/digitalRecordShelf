@@ -24,7 +24,7 @@ const OVERALL_TOP_ALBUMS_NUM = 275;
 
 const Main = ({ location }) => {
   const [loading, setLoading] = useState(false);
-  const [lastfmUser, setLastfmUser] = useState('foxtrapper121');
+  const [lastfmUser, setLastfmUser] = useState('');
   const [spotifyToken, setSpotifyToken] = useState('');
   const [deviceId, setDeviceId] = useState('');
   const [overallAlbums, setOverallAlbums] = useState([]);
