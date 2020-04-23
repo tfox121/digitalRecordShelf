@@ -1,10 +1,13 @@
 import React from 'react';
-import { Header, Table, Icon } from 'semantic-ui-react';
+import { Header, Table } from 'semantic-ui-react';
 
 import './AlbumListView.css';
+import SpotifyConnectPrompt from './SpotifyConnectPrompt';
 
 const AlbumListView = (props) => {
-  const { albumSelect, albums, filteredNum } = props;
+  const {
+    albumSelect, albums, filteredNum, token,
+  } = props;
 
   const handleClick = (event) => {
     const albumInfo = Array.from(event.currentTarget.parentElement.parentElement.children)
@@ -28,7 +31,7 @@ const AlbumListView = (props) => {
         <Table.Body>
           {albums.map((album) => (
             <Table.Row key={album.name}>
-              <Table.Cell><Icon className="grid-play-icon" name="play circle outline" onClick={handleClick} size="large" /></Table.Cell>
+              <Table.Cell><SpotifyConnectPrompt token={token} size="large" handleClick={handleClick} /></Table.Cell>
               <Table.Cell>{album.name}</Table.Cell>
               <Table.Cell>{album.artist.name}</Table.Cell>
               <Table.Cell>{album.playcount}</Table.Cell>

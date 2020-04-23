@@ -1,30 +1,37 @@
-import React, { useState, useRef } from 'react';
+import axios from 'axios';
+import React, { useState, useRef, useEffect } from 'react';
 import AliceCarousel from 'react-alice-carousel';
 import 'react-alice-carousel/lib/alice-carousel.css';
 import {
-  Image, Header, Segment, Container, Icon,
+  Image, Header, Segment, Container,
 } from 'semantic-ui-react';
 
 import './AlbumArtView.css';
+import SpotifyConnectPrompt from './SpotifyConnectPrompt';
 
 const AlbumArtView = (props) => {
-  const { albumSelect, albums } = props;
+  const {
+    albumSelect, albums, extendedArt, token,
+  } = props;
   const [carouselPos, setCarouselPos] = useState(0);
   const bigCarouselRef = useRef(null);
   const smallCarouselRef = useRef(null);
 
+  // if (!extendedArt) {
+  //   return null;
+  // }
 
   const handleOnDragStart = (e) => e.preventDefault();
 
   const handleSlideChange = (e) => {
-    setCarouselPos(e.item);
+    setCarouselPos(Number(e.item));
     bigCarouselRef.current.slideTo(e.item);
   };
 
   const onCarouselItemSelect = (e) => {
     bigCarouselRef.current.slideTo(e.target.id);
     smallCarouselRef.current.slideTo(e.target.id);
-    setCarouselPos(e.target.id);
+    setCarouselPos(Number(e.target.id));
   };
 
   const handleClick = (event) => {
@@ -35,11 +42,18 @@ const AlbumArtView = (props) => {
     albumSelect(albumInfo.reverse());
   };
 
+  // const imageSource = (index, album) => {
+  //   if (extendedArt[index]) {
+  //     return extendedArt[index][0].image;
+  //   }
+  //   return album.image[3]['#text'];
+  // };
+
   const imagesPlusText = albums.map((album) => (
     <Segment basic inverted textAlign="center">
       <div className="image-container">
         <Image bordered onDragStart={handleOnDragStart} src={album.image[3]['#text']} />
-        <div className="image-icon"><Icon size="huge" name="play circle outline" onClick={handleClick} /></div>
+        <div className="image-icon"><SpotifyConnectPrompt token={token} size="huge" handleClick={handleClick} /></div>
       </div>
       <Header as="h5" className="album-info">
         <div>{album.artist.name}</div>
