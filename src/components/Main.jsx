@@ -6,6 +6,7 @@ import lastfm from '../api/lastfm';
 import spotify from '../api/spotify';
 // import staticData from '../data/staticData';
 import getRandomSubset from '../utils/getRandomSubset';
+import addExtendedArtToArray from '../utils/getExtendedArt';
 import history from '../history';
 import { getUserTopMusic } from '../utils/lastfm';
 import {
@@ -33,26 +34,12 @@ const Main = ({ location }) => {
   const [randomAlbums, setRandomAlbums] = useState([]);
   const [extendedArt, setExtendedArt] = useState([]);
 
-  // const getExtendedArt = async (albumList) => {
-  //   console.log('Albums', albumList);
-  //   const list = [];
-  //   await albumList.forEach(async (album, index) => {
-  //     try {
-  //       const response = await axios.get(`http://coverartarchive.org/release/${album.mbid}`);
-  //       console.log(response.data);
-  //       list[index] = response.data.images;
-  //     } catch (err) {
-  //       console.log('No art found');
-  //       list[index] = [{ image: album.image[3]['#text'] }];
-  //     }
-  //   });
-
-  //   console.log('ART', list);
-  //   setExtendedArt(list);
-  // };
-
   // useEffect(() => {
-  //   getExtendedArt(randomAlbums);
+  //   const setArt = async () => {
+  //     const albumArray = await addExtendedArtToArray(randomAlbums);
+  //     setExtendedArt(albumArray);
+  //   };
+  //   setArt();
   // }, [randomAlbums]);
 
   useEffect(() => {
@@ -101,6 +88,7 @@ const Main = ({ location }) => {
 
   const submitUser = async (e) => {
     e.preventDefault();
+    history.push('/');
     setLoading(true);
     await getUserTopMusic(lastfm, 'user.getTopAlbums', lastfmUser, '12month', TWELVE_MONTH_TOP_ALBUMS_FILTER, setLastYearAlbums);
     await getUserTopMusic(lastfm, 'user.getTopArtists', lastfmUser, '6month', SIX_MONTH_TOP_ARTIST_FILTER, setLastSixMonthsArtists);
@@ -122,7 +110,7 @@ const Main = ({ location }) => {
   return (
     <>
       <Header as="h1" onClick={() => history.push('/')} content="Record Shelf Rediscovery" />
-      <LastfmInput lastfmUser={lastfmUser} setLastfmUser={setLastfmUser} submitUser={submitUser} />
+      <LastfmInput lastfmUser={lastfmUser} setLastfmUser={setLastfmUser} submitUser={submitUser} token={spotifyToken} />
       <SpotifyAuthButton token={spotifyToken} />
       <Player
         spotifyToken={spotifyToken}
