@@ -1,5 +1,4 @@
-import axios from 'axios';
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import AliceCarousel from 'react-alice-carousel';
 import 'react-alice-carousel/lib/alice-carousel.css';
 import {
@@ -14,12 +13,9 @@ const AlbumArtView = (props) => {
     albumSelect, albums, extendedArt, token,
   } = props;
   const [carouselPos, setCarouselPos] = useState(0);
+
   const bigCarouselRef = useRef(null);
   const smallCarouselRef = useRef(null);
-
-  // if (!extendedArt) {
-  //   return null;
-  // }
 
   const handleOnDragStart = (e) => e.preventDefault();
 
@@ -42,25 +38,18 @@ const AlbumArtView = (props) => {
     albumSelect(albumInfo.reverse());
   };
 
-  // const imageSource = (index, album) => {
-  //   if (extendedArt[index]) {
-  //     return extendedArt[index][0].image;
-  //   }
-  //   return album.image[3]['#text'];
-  // };
-
   const imagesPlusText = albums.map((album) => (
-    <Segment basic inverted textAlign="center">
+    <Container textAlign="center">
       <div className="image-container">
         <Image bordered onDragStart={handleOnDragStart} src={album.image[3]['#text']} />
         <div className="image-icon"><SpotifyConnectPrompt token={token} size="huge" handleClick={handleClick} /></div>
       </div>
-      <Header as="h5" className="album-info">
+      <Header inverted as="h5" className="album-info">
         <div>{album.artist.name}</div>
         <div className="space">{' - '}</div>
         <div>{album.name}</div>
       </Header>
-    </Segment>
+    </Container>
   ));
 
   const images = albums.map((album, index) => (
@@ -69,8 +58,41 @@ const AlbumArtView = (props) => {
     </Container>
   ));
 
+  // const extraImages = (imgArr) => imgArr.map((img, index) => (
+  //   <Container>
+  //     <Image id={index} onDragStart={handleOnDragStart} src={img} />
+  //   </Container>
+  // ));
+
+  // const extraImagesCarousel = (album) => {
+  //   console.log('IMAGES', album.images);
+  //   if (album.images) {
+  //     return (
+  //       <AliceCarousel
+  //         mouseTrackingEnabled
+  //         items={extraImages(album.images)}
+  //         dotsDisabled
+  //         buttonsDisabled
+  //         responsive={{
+  //           0: {
+  //             items: 3,
+  //           },
+  //           767: {
+  //             items: 4,
+  //           },
+  //           1023: {
+  //             items: 5,
+  //           },
+  //         }}
+  //       />
+  //     );
+  //   }
+  //   return null;
+  // };
+
   return (
     <>
+      {/* {extraImagesCarousel(extendedArt[carouselPos])} */}
       <AliceCarousel
         touchTrackingEnabled={false}
         items={imagesPlusText}
@@ -87,13 +109,13 @@ const AlbumArtView = (props) => {
         startIndex={carouselPos}
         responsive={{
           0: {
-            items: 3,
+            items: 5,
           },
           767: {
-            items: 4,
+            items: 5,
           },
           1023: {
-            items: 5,
+            items: 6,
           },
         }}
       />

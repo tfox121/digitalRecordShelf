@@ -32,10 +32,10 @@ const ModeSelector = (props) => {
         />
       </Menu>
       <div style={{ display: `${activeItem === 'art' ? 'block' : 'none'}` }}>
-        <AlbumArtView albums={albums} albumSelect={albumSelect} token={token} />
+        <AlbumArtView albums={albums} albumSelect={albumSelect} extendedArt={extendedArt} token={token} />
       </div>
       <div style={{ display: `${activeItem === 'list' ? 'block' : 'none'}` }}>
-        <AlbumListView albums={albums} albumSelect={albumSelect} filteredNum={filteredNum} extendedArt={extendedArt} token={token} />
+        <AlbumListView albums={albums} albumSelect={albumSelect} filteredNum={filteredNum} token={token} />
       </div>
     </div>
   );
