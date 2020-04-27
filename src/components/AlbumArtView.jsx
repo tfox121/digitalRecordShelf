@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import AliceCarousel from 'react-alice-carousel';
 import 'react-alice-carousel/lib/alice-carousel.css';
 import {
-  Image, Header, Segment, Container,
+  Image, Header, Container,
 } from 'semantic-ui-react';
 
 import './AlbumArtView.css';
@@ -10,7 +10,7 @@ import SpotifyConnectPrompt from './SpotifyConnectPrompt';
 
 const AlbumArtView = (props) => {
   const {
-    albumSelect, albums, extendedArt, token,
+    albumSelect, albums, token,
   } = props;
   const [carouselPos, setCarouselPos] = useState(0);
 
@@ -25,9 +25,11 @@ const AlbumArtView = (props) => {
   };
 
   const onCarouselItemSelect = (e) => {
-    bigCarouselRef.current.slideTo(e.target.id);
-    smallCarouselRef.current.slideTo(e.target.id);
-    setCarouselPos(Number(e.target.id));
+    if (Number(e.target.id) !== carouselPos) {
+      bigCarouselRef.current.slideTo(e.target.id);
+      smallCarouselRef.current.slideTo(e.target.id);
+      setCarouselPos(Number(e.target.id));
+    }
   };
 
   const handleClick = (event) => {
@@ -94,7 +96,6 @@ const AlbumArtView = (props) => {
     <>
       {/* {extraImagesCarousel(extendedArt[carouselPos])} */}
       <AliceCarousel
-        touchTrackingEnabled={false}
         items={imagesPlusText}
         startIndex={carouselPos}
         dotsDisabled

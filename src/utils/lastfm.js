@@ -50,7 +50,9 @@ export const getAlbumTracks = async (axiosLastfm, album) => {
   }
 };
 
-export const getUserTopMusic = async (axiosLastfm, method, user, period, limit, update) => {
+export const getUserTopMusic = async (
+  axiosLastfm, method, user, period, limit, updateHook, errorHook,
+) => {
   try {
     const response = await axiosLastfm.get('/', {
       params: {
@@ -76,13 +78,19 @@ export const getUserTopMusic = async (axiosLastfm, method, user, period, limit, 
           }
           return 0;
         });
-        update(albumWithTracks);
+        updateHook(albumWithTracks);
       }
-      update(response.data.topalbums.album);
+      updateHook(response.data.topalbums.album);
     } else {
-      update(response.data.topartists.artist);
+      updateHook(response.data.topartists.artist);
     }
+    errorHook('');
   } catch (err) {
     console.error(err);
+    if (err.response && err.response.status === 404) {
+      errorHook('That username could not be found or the.');
+    } else {
+      errorHook('There was a problem with the request.');
+    }
   }
 };

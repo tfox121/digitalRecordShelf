@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Header } from 'semantic-ui-react';
+import { Header, Message } from 'semantic-ui-react';
 
 import lastfm from '../api/lastfm';
 import spotify from '../api/spotify';
 // import staticData from '../data/staticData';
 import getRandomSubset from '../utils/getRandomSubset';
-import addExtendedArtToArray from '../utils/getExtendedArt';
+// import addExtendedArtToArray from '../utils/getExtendedArt';
 import history from '../history';
 import { getUserTopMusic } from '../utils/lastfm';
 import {
-  spotifyFindAlbumUri, changeSpotifyMusic, initiateSpotifyWebPlayback,
+  spotifyFindAlbumUri, changeSpotifyMusic, initiateSpotifyWebPlayer,
 } from '../utils/spotify';
 
 import LastfmInput from './LastfmInput';
@@ -33,6 +33,9 @@ const Main = ({ location }) => {
   const [filteredAlbums, setFilteredAlbums] = useState([]);
   const [randomAlbums, setRandomAlbums] = useState([]);
   const [extendedArt, setExtendedArt] = useState([]);
+  const [errorMsgLFM, setErrorMsgLFM] = useState('');
+  const [errorMsgSpotify, setErrorMsgSpotify] = useState('');
+
 
   // useEffect(() => {
   //   const setArt = async () => {
@@ -52,7 +55,7 @@ const Main = ({ location }) => {
   useEffect(() => {
     if (spotifyToken) {
       try {
-        initiateSpotifyWebPlayback(spotifyToken);
+        initiateSpotifyWebPlayer(spotifyToken);
       } catch (err) {
         console.error(err);
       }
@@ -65,7 +68,8 @@ const Main = ({ location }) => {
       const albums = overallAlbums.filter((album) => {
         if (!lastYearAlbums.find(({ name }) => name === album.name)
           && !lastSixMonthsArtists.find(({ name }) => name === album.artist.name)
-          && (!album.tracks || album.tracks.length > 4)) {
+          && (!album.tracks || album.tracks.length > 4)
+          && album.image[3]['#text'] !== '') {
           return true;
         }
 
@@ -90,33 +94,47 @@ const Main = ({ location }) => {
     e.preventDefault();
     history.push('/');
     setLoading(true);
-    await getUserTopMusic(lastfm, 'user.getTopAlbums', lastfmUser, '12month', TWELVE_MONTH_TOP_ALBUMS_FILTER, setLastYearAlbums);
-    await getUserTopMusic(lastfm, 'user.getTopArtists', lastfmUser, '6month', SIX_MONTH_TOP_ARTIST_FILTER, setLastSixMonthsArtists);
-    await getUserTopMusic(lastfm, 'user.getTopAlbums', lastfmUser, 'overall', OVERALL_TOP_ALBUMS_NUM, setOverallAlbums);
+    await getUserTopMusic(lastfm, 'user.getTopAlbums', lastfmUser, '12month', TWELVE_MONTH_TOP_ALBUMS_FILTER, setLastYearAlbums, setErrorMsgLFM);
+    await getUserTopMusic(lastfm, 'user.getTopArtists', lastfmUser, '6month', SIX_MONTH_TOP_ARTIST_FILTER, setLastSixMonthsArtists, setErrorMsgLFM);
+    await getUserTopMusic(lastfm, 'user.getTopAlbums', lastfmUser, 'overall', OVERALL_TOP_ALBUMS_NUM, setOverallAlbums, setErrorMsgLFM);
     // setFilteredAlbums(staticData);
     setLoading(false);
   };
 
   const albumSelect = async (albumData) => {
     try {
-      const uri = await spotifyFindAlbumUri(spotify, albumData, spotifyToken);
-      changeSpotifyMusic(axios, spotify, uri, spotifyToken);
+      const uri = await spotifyFindAlbumUri(spotify, albumData, spotifyToken, setErrorMsgSpotify);
+      if (uri) {
+        changeSpotifyMusic(axios, spotify, uri, spotifyToken, setErrorMsgSpotify);
+      }
     } catch (err) {
       console.error(err);
     }
   };
 
+  const errorMessageLFMRender = (err) => {
+    if (err) {
+      return (
+        <Message negative>
+          <Message.Header>Oops...</Message.Header>
+          <p>{err}</p>
+        </Message>
+      );
+    }
+    return null;
+  };
 
   return (
     <>
       <Header as="h1" onClick={() => history.push('/')} content="Record Shelf Rediscovery" />
-      <LastfmInput lastfmUser={lastfmUser} setLastfmUser={setLastfmUser} submitUser={submitUser} token={spotifyToken} />
+      <LastfmInput lastfmUser={lastfmUser} error={!errorMsgLFM === ''} setLastfmUser={setLastfmUser} submitUser={submitUser} token={spotifyToken} />
+      {errorMessageLFMRender(errorMsgLFM)}
       <SpotifyAuthButton token={spotifyToken} />
       <Player
         spotifyToken={spotifyToken}
         setSpotifyToken={setSpotifyToken}
       />
-      <ModeSelector loading={loading} albums={randomAlbums} albumSelect={albumSelect} extendedArt={extendedArt} filteredNum={filteredAlbums.length} token={spotifyToken} />
+      <ModeSelector loading={loading} albums={randomAlbums} albumSelect={albumSelect} extendedArt={extendedArt} filteredNum={filteredAlbums.length} token={spotifyToken} errMsg={errorMsgSpotify} />
       <LoaderBlock loading={loading} token={spotifyToken} />
     </ >
   );

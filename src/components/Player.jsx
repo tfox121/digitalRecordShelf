@@ -43,7 +43,7 @@ const Player = (props) => {
     if (!spotifyToken && checkInterval) {
       clearInterval(checkInterval);
     }
-  }, [spotifyToken]);
+  }, [spotifyToken, setSpotifyToken]);
 
   if (!mediaItem || !mediaItem.name) {
     return null;
