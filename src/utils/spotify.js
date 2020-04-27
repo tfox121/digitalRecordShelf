@@ -14,15 +14,32 @@ export const getSpotifyPlayingState = async (axiosSpotify, token) => {
   }
 };
 
-export const spotifyFindAlbumUri = async (axiosSpotify, albumData, token) => {
-  const response = await axiosSpotify.get(`/search?q=album:${encodeURI(albumData[0])}%20artist:${encodeURI(albumData[1])}`, {
+export const spotifyFindAlbumUri = async (axiosSpotify, albumData, token, errorHook) => {
+  const lastfmArtistName = albumData[1].toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  const lastfmAlbumName = albumData[0].toLowerCase().replace(/& /, '');
+
+  const response = await axiosSpotify.get(`/search?q=album:${encodeURI(lastfmAlbumName)}%20artist:${encodeURI(lastfmArtistName)}`, {
     headers: { Authorization: `Bearer ${token}` },
     params: {
       type: 'album',
       limit: 1,
     },
   });
-  return response.data.albums.items[0].uri;
+
+  if (response.data.albums.items.length) {
+    const trimmedLFMArtistName = lastfmArtistName.replace(/^[tT]he /, '');
+    const found = response.data.albums.items[0].artists.find((artist) => artist.name.toLowerCase().replace(/^[tT]he /, '').normalize('NFD').replace(/[\u0300-\u036f]/g, '') === trimmedLFMArtistName);
+    if (found) {
+      errorHook('');
+      return response.data.albums.items[0].uri;
+    }
+    console.log('Artist/Album not found');
+    errorHook('The artist or album count not be found on Spotify.');
+    return null;
+  }
+  console.log('Artist/Album not found');
+  errorHook('The artist or album count not be found on Spotify.');
+  return null;
 };
 
 const getDeviceId = async (axiosSpotify, token) => {
@@ -37,11 +54,10 @@ const getDeviceId = async (axiosSpotify, token) => {
     return null;
   } catch (err) {
     console.log('No devices found');
-    return null;
   }
 };
 
-export const changeSpotifyMusic = async (axios, axiosSpotify, uri, token) => {
+export const changeSpotifyMusic = async (axios, axiosSpotify, uri, token, errorHook) => {
   console.log('Setting music');
   const deviceId = await getDeviceId(axiosSpotify, token);
   if (!deviceId && /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
@@ -71,15 +87,21 @@ export const changeSpotifyMusic = async (axios, axiosSpotify, uri, token) => {
         },
       });
       console.log(response);
+      errorHook('');
     } catch (err) {
       console.error(err);
+      if (err.response && err.response.status === 403) {
+        errorHook('Playback failed - do you have Spotify Premium?');
+      } else {
+        errorHook('There was a problem playing through your account.');
+      }
       throw err;
     }
   }
 };
 
 
-export const initiateSpotifyWebPlayback = async (token) => {
+export const initiateSpotifyWebPlayer = async (token) => {
   if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
     console.log('Web playback not supported on mobile devices');
   } else {

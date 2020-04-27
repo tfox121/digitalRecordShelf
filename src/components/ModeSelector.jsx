@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { Menu, Divider } from 'semantic-ui-react';
+import { Menu, Divider, Message } from 'semantic-ui-react';
 
 import AlbumArtView from './AlbumArtView';
 import AlbumListView from './AlbumListView';
 
 const ModeSelector = (props) => {
   const {
-    albums, albumSelect, filteredNum, extendedArt, loading, token,
+    albums, albumSelect, filteredNum, extendedArt, loading, token, errMsg,
   } = props;
   const [activeItem, setActiveItem] = useState('art');
 
@@ -15,6 +15,18 @@ const ModeSelector = (props) => {
   }
 
   const handleItemClick = (e, { name }) => setActiveItem(name);
+
+  const errorMessageSpotifyRender = (err) => {
+    if (err) {
+      return (
+        <Message negative>
+          <Message.Header>Oops...</Message.Header>
+          <p>{err}</p>
+        </Message>
+      );
+    }
+    return null;
+  };
 
   return (
     <div>
@@ -31,6 +43,7 @@ const ModeSelector = (props) => {
           onClick={handleItemClick}
         />
       </Menu>
+      {errorMessageSpotifyRender(errMsg)}
       <div style={{ display: `${activeItem === 'art' ? 'block' : 'none'}` }}>
         <AlbumArtView albums={albums} albumSelect={albumSelect} extendedArt={extendedArt} token={token} />
       </div>
