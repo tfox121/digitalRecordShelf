@@ -88,7 +88,7 @@ export const getUserTopMusic = async (
   } catch (err) {
     console.error(err);
     if (err.response && err.response.status === 404) {
-      errorHook('That username could not be found or the.');
+      errorHook('That username could not be found.');
     } else {
       errorHook('There was a problem with the request.');
     }
