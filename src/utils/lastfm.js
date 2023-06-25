@@ -37,7 +37,7 @@ export const getAlbumTracks = async (axiosLastfm, album) => {
         });
       }
     }
-    if (response.data.album) {
+    if (response.data.album && response.data.album.tracks) {
       const tracks = response.data.album.tracks.track;
       const albumWithTracks = { ...album, tracks, ratio: album.playcount / tracks.length };
       return albumWithTracks;
