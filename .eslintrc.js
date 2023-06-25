@@ -3,7 +3,7 @@ module.exports = {
   env: {
     browser: true,
     es6: true,
-    "jest/globals": true
+    'jest/globals': true
   },
   parser: 'babel-eslint',
   extends: ['airbnb'],
@@ -20,6 +20,7 @@ module.exports = {
     sourceType: 'module',
   },
   plugins: ['react', 'react-hooks', 'jest'],
+  ignorePatterns: ['src/semantic-ui/**'],
   rules: {
     'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
     'react/forbid-prop-types': [0, { forbid: ['any'] }],
@@ -29,8 +30,8 @@ module.exports = {
       2,
       { allow: ['_id', '__REDUX_DEVTOOLS_EXTENSION_COMPOSE__'] },
     ],
-    "react/jsx-props-no-spreading": [2, {
-      "exceptions": ["input"]
+    'react/jsx-props-no-spreading': [2, {
+      'exceptions': ['input']
     }],
     'no-shadow': [
       2,
@@ -41,12 +42,12 @@ module.exports = {
     'react-hooks/exhaustive-deps': [
       1
     ],
-    "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
-    "no-unused-expressions": ["error", { "allowShortCircuit": true, "allowTernary": true }],
-    "no-mixed-operators": [
-      "error",
+    'import/no-extraneous-dependencies': ['error', { 'devDependencies': true }],
+    'no-unused-expressions': ['error', { 'allowShortCircuit': true, 'allowTernary': true }],
+    'no-mixed-operators': [
+      'error',
       {
-        "allowSamePrecedence": true
+        'allowSamePrecedence': true
       }
     ]
   },
