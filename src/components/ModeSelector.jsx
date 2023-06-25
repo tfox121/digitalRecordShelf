@@ -45,10 +45,20 @@ const ModeSelector = (props) => {
       </Menu>
       {errorMessageSpotifyRender(errMsg)}
       <div style={{ display: `${activeItem === 'art' ? 'block' : 'none'}` }}>
-        <AlbumArtView albums={albums} albumSelect={albumSelect} extendedArt={extendedArt} token={token} />
+        <AlbumArtView
+          albums={albums}
+          albumSelect={albumSelect}
+          extendedArt={extendedArt}
+          token={token}
+        />
       </div>
       <div style={{ display: `${activeItem === 'list' ? 'block' : 'none'}` }}>
-        <AlbumListView albums={albums} albumSelect={albumSelect} filteredNum={filteredNum} token={token} />
+        <AlbumListView
+          albums={albums}
+          albumSelect={albumSelect}
+          filteredNum={filteredNum}
+          token={token}
+        />
       </div>
     </div>
   );

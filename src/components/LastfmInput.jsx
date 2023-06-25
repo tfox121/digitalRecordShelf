@@ -24,7 +24,9 @@ const LastfmInput = (props) => {
       <Modal.Content>
         <Modal.Description>
           <Header>Connect first?</Header>
-          If you think you might want to listen to your albums you should connect to Spotify now, otherwise you&apos;ll have to reload your selection. It&apos;s not quick...
+          If you think you might want to listen to your albums
+          you should connect to Spotify now, otherwise you&apos;ll
+          have to reload your selection. It&apos;s not quick...
           <br />
           <br />
           Just want to look at your albums? Go right ahead!

@@ -32,7 +32,7 @@ const Main = ({ location }) => {
   const [lastSixMonthsArtists, setLastSixMonthsArtists] = useState([]);
   const [filteredAlbums, setFilteredAlbums] = useState([]);
   const [randomAlbums, setRandomAlbums] = useState([]);
-  const [extendedArt, setExtendedArt] = useState([]);
+  // const [extendedArt, setExtendedArt] = useState([]);
   const [errorMsgLFM, setErrorMsgLFM] = useState('');
   const [errorMsgSpotify, setErrorMsgSpotify] = useState('');
 
@@ -134,7 +134,14 @@ const Main = ({ location }) => {
         spotifyToken={spotifyToken}
         setSpotifyToken={setSpotifyToken}
       />
-      <ModeSelector loading={loading} albums={randomAlbums} albumSelect={albumSelect} extendedArt={extendedArt} filteredNum={filteredAlbums.length} token={spotifyToken} errMsg={errorMsgSpotify} />
+      <ModeSelector
+        loading={loading}
+        albums={randomAlbums}
+        albumSelect={albumSelect}
+        filteredNum={filteredAlbums.length}
+        token={spotifyToken}
+        errMsg={errorMsgSpotify}
+      />
       <LoaderBlock loading={loading} token={spotifyToken} />
     </ >
   );

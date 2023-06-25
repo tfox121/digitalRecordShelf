@@ -51,10 +51,10 @@ const getDeviceId = async (axiosSpotify, token) => {
     if (response.data.devices[0]) {
       return response.data.devices[0].id;
     }
-    return null;
   } catch (err) {
     console.log('No devices found');
   }
+  return null;
 };
 
 export const changeSpotifyMusic = async (axios, axiosSpotify, uri, token, errorHook) => {
